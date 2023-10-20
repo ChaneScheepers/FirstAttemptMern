@@ -1,34 +1,9 @@
-// const Router = require("./routes/index");
+const server = require("./server");
 
-// //tests if the fav feature is working correctly. 
-// test("calls send on request with no fav message", () => {
-//   mockFn = jest.fn();
+//can you please assist me with the below. I would like to test how to see if a user is an admin?
 
-//   const res = {
-//     send: mockFn
-//   };
- 
-//   getFavouritesHandler(null, res);
-
-//   expect(mockFn.mock.calls).toHaveLength(1);  
-//   expect(mockFn.mock.calls[0][0]).toEqual({
-//     message: "You have no favourites to display",
-//   });
-// });
-
-// test("calls send with fav if they exist", () => {
-//     setFavourites(["hallo", "baai"]);
-
-//     mockFn = jest.fn();
-  
-//     const res = {
-//       send: mockFn
-//     };
-   
-//     getFavouritesHandler(null, res);
-  
-//     expect(mockFn.mock.calls).toHaveLength(1);  
-//     expect(mockFn.mock.calls[0][0]).toEqual({
-//       favourites: ["hallo", "baai"],
-//     });
-//   });
+describe("Space test suite", () => {
+  it("My Space Test", () => {
+    expect(true).toEqual(true);
+  });
+});
