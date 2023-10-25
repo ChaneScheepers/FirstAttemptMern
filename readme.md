@@ -6,12 +6,12 @@ You can install the file directly from the file.
 Once installed, you need to open your preferred terminal and cd to the backend. Type npm i.
 Do the same for the front end.
 
-#Setup
--In order to setup the required passwords and usernames, please go to the backend file/server. On line 16 - 33 you can create the relevant details.
+#Access
+Admin
+username: "Mazvita"
+password: "secret"
 
--Set up your own MongoDatase on (Backend/controllers/controller line 6)
-
-Keeping the details on the backend creates more security as the details cannot be collected from a user in the frontend.
+Alternively reg a new user on the login page.
 
 #Run
 Once installed, cd to the frontend and backend and type npm run start.
@@ -47,5 +47,6 @@ List functional and non-functional requirements.
 https://github.com/ChaneScheepers/FirstAttemptMern
 
 #Recommendations for improvement
+
 - Make cookies secret (I did not do so the reviewer can review).
 - Add functionality to add candidate names and progress to specific roles.

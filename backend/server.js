@@ -1,170 +1,55 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const StockModel = require("./model/model");
+const app = require ('./app');
 
-const controller = require("./controllers/controller");
+//import controllers
+const controller = require("./controllers/vacancyController");
+const userController = require("./controllers/userController");
 
-const app = express();
+// const app = express();
 const port = 8000;
 
+//apply bodyparser to be able to use JSON data. 
 app.use(bodyParser.json());
 app.use(cors());
 
-//The below are usernames, passwords and userroles (Very standard)
-let userDatabase = [
-  {
-    username: "Mazvita",
-    password: "secret",
-    admin: true,
-  },
-  {
-    username: "Meagan",
-    password: "secret",
-    admin: false,
-  },
-  {
-    username: "Kabelo",
-    password: "secret",
-    admin: false,
-  },
-];
-
-//middleware
 app.get("/", (req, res) => {
   res.send("Home");
 });
 
+//////////////////////////////////////////////////////////////////////////////////
+//The below are all the API Middleware for CRUD, specific to User/login page.
+//The below is purely for testing. This is used to see if the register works.
+app.get("/data", userController.see_users);
+
+//signup
+app.post("/register", userController.reg_user);
+
 //login and get token
-app.post("/login", (req, res) => {
-  const userLogin = req.body.username;
-  const pwd = req.body.password;
+app.post("/login", userController.get_token);
 
-  const userIndex = userDatabase.findIndex(
-    (index) => index.username == userLogin
-  );
+//See if user has admin rights.
+app.get("/admin", userController.if_admin);
 
-  if (userIndex > -1 && pwd == userDatabase[userIndex].password) {
-    let payload = {
-      name: userLogin,
-      password: pwd,
-      admin: userDatabase[userIndex].admin,
-    };
+//See if user has a toen in order to few user page.
+app.get("/user", userController.if_user);
 
-    const token = jwt.sign(JSON.stringify(payload), "jwt-secret-task2", {
-      algorithm: "HS256",
-    });
-    res.send({
-      token: token,
-    });
-  } else {
-    res.status(403).send({
-      err: "user not Authenticated.",
-    });
-  }
-});
 
-//admin page.
-app.get("/admin", (req, res) => {
-  const token = req.headers["authorization"].split(" ")[1];
-  try {
-    const decoded = jwt.verify(token, "jwt-secret-task2");
-
-    const accessIndex = decoded.admin;
-
-    if (accessIndex) {
-      res.send({
-        msg: "Welcome Admin",
-        access: true,
-      });
-    } else {
-      res.status(403).send({
-        msg: "Your Account is verified, but you do not have access to this page.",
-      });
-    }
-  } catch (err) {
-    res.sendStatus(401);
-    console.log(err);
-  }
-});
-
-app.get("/user", (req, res) => {
-  const token = req.headers["authorization"].split(" ")[1];
-  try {
-    const decoded = jwt.verify(token, "jwt-secret-task2");
-    const user = decoded.name;
-    const isAdmin = decoded.admin;
-
-    console.log(user);
-    console.log(isAdmin);
-
-    const accessPerson = decoded.name.indexOf(user);
-
-    console.log(accessPerson);
-
-    if (accessPerson > -1) {
-      res.send({
-        msg: "Success! Welcome " + user,
-        user: user,
-        admin: isAdmin,
-      });
-    } else {
-      res.status(403).send({
-        msg: "You Account is verified, but you do not have access to this page.",
-      });
-    }
-  } catch (err) {
-    res.sendStatus(401);
-    console.log(err);
-  }
-});
-
-////
+/////////////////////////////////////////////////////////////////////////////////////
+// The below are all the API for CRUD Vacancies.
 app.get("/all", controller.find_items);
 
-app.get("/getItem/:id", (req, res) => {
-  const id = req.params.id;
-  StockModel.findById({ _id: id })
-    .then((tasks) => res.json(tasks))
-    .catch((err) => res.json(err));
-});
+app.get("/getItem/:id", controller.find_item);
 
+app.put("/update/:id", controller.edit_item);
 
-app.put("/update/:id", (req, res) => {
-  const id = req.params.id;
-  StockModel.findByIdAndUpdate(
-    { _id: id },
-    {
-      Name: req.body.Name,
-      Status: req.body.Status,
-      Completed: req.body.Completed,
-      Quantity: req.body.Quantity,
-    }
-  )
-    .then((cars) => res.json(cars))
-    .catch((err) => res.json(err));
-});
+app.post("/add", controller.post_item);
 
-app.post("/add", (req, res) => {
-  try {
-    StockModel.create(req.body);
-    console.log(req.body);
-    res.status(201).send({
-      msg: "Added",
-    });
-  } catch (err) {
-    console.log(err);
-  }
-});
+app.delete("/delete/:id", controller.del_item);
 
-app.delete("/delete/:id", (req, res) => {
-  const id = req.params.id;
-  StockModel.findByIdAndDelete({ _id: id })
-    .then((stock) => res.json(stock))
-    .catch((err) => res.json(err));
-});
-
+////////////////////////////////////////////////////////////////////////////////////
+//PORT Listener
 app.listen(port, () => {
   console.log("Application up and running on port: " + port);
 });
