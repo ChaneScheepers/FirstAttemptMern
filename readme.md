@@ -43,7 +43,7 @@ List functional and non-functional requirements.
 5. As Linda, I want to be able to amend a role. Changing the status from interviewing to offering
 6. As Linda, I want to be able to delete a role that has been cancelled due to budget constraints.
 
-#Link to deployment
+#Link to GitHub directory:
 https://github.com/ChaneScheepers/FirstAttemptMern
 
 #Recommendations for improvement

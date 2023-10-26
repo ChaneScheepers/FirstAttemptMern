@@ -3,7 +3,7 @@ const server = require("./server");
 
 const app = require("./app");
 
-
+//The below tests are to check if the login and Register CRUD functions are working 
 test("Should reg user", async () => {
   await request(app)
     .post("/register")
